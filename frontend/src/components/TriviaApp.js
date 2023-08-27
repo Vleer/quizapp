@@ -36,7 +36,10 @@ const TriviaApp = () => {
           key={index}
           question={item.question}
           answerOptions={item.answerOptions}
-          onAnswerSelect={(answer) => handleAnswerSelect(index, answer)}
+          questionIndex={index} // Pass the question index to the TriviaQuestion component
+          onAnswerSelect={(questionIndex, answer) =>
+            handleAnswerSelect(questionIndex, answer)
+          }
         />
       ))}
       <button onClick={handleSubmit}>Submit</button>

@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class QuizController {
@@ -27,12 +30,23 @@ public class QuizController {
     }
 
     @PostMapping("/checkanswers")
-    public ResponseEntity<List<TriviaAnswerDTO>> checkAnswers(@RequestBody List<TriviaQuestionDTO> questions) {
+    public ResponseEntity<List<TriviaAnswerDTO>> checkAnswers(@RequestBody Map<String, String> userAnswers) {
+//        List<TriviaAnswerDTO> answers = new ArrayList<>();
+
+        List<TriviaAnswerDTO> answers = triviaApiService.fetchAnswers(userAnswers.size());
         // Assuming you want to check answers for a list of TriviaQuestionDTO objects
-        // Here, 'questions' is the list of questions from the frontend
+
+        for (Map.Entry<String, String> entry : userAnswers.entrySet()) {
+            int questionIndex = Integer.parseInt(entry.getKey());
+
+            if (questionIndex >= 0 && questionIndex < answers.size()) {
+                TriviaAnswerDTO answerDTO = answers.get(questionIndex);
+                answerDTO.setUser_answer(entry.getValue());
+            }
+        }
+
 
         // Call the checkAnswers() method to map the questions to answers
-        List<TriviaAnswerDTO> answers = triviaApiService.checkAnswers(questions.size());
 
         // Assuming you have some logic to compare user answers with correct answers
         // You can set the 'user_answer' property in TriviaAnswerDTO objects here

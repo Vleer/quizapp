@@ -42,7 +42,7 @@ public class TriviaApiService {
     }
 
     @Cacheable("triviaData") // Use the same cache name for both question and answer mapping
-    public List<TriviaAnswerDTO> checkAnswers(int amount) {
+    public List<TriviaAnswerDTO> fetchAnswers(int amount) {
         String apiUrl = API_URL + "?amount=" + amount;
         TriviaApiResponse response = restTemplate.getForObject(apiUrl, TriviaApiResponse.class);
         return response.getResults().stream()
@@ -68,7 +68,7 @@ public class TriviaApiService {
         TriviaAnswerDTO dto = new TriviaAnswerDTO();
         dto.setQuestion(question.getQuestion());
         dto.setCorrect_answer(question.getCorrect_answer());
-        dto.setUser_answer("test222");
+//        dto.setUser_answer("test222");
         // Set user_answer if applicable
         return dto;
     }
