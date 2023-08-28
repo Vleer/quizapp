@@ -5,6 +5,8 @@ const TriviaQuestion = ({
   answerOptions,
   questionIndex,
   onAnswerSelect,
+  isCorrect,
+  showResults,
 }) => {
   return (
     <div>
@@ -22,6 +24,7 @@ const TriviaQuestion = ({
           </label>
         </div>
       ))}
+      {isCorrect !== null && <p>{isCorrect ? "Correct" : "Incorrect"}</p>}
     </div>
   );
 };

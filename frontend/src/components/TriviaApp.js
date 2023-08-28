@@ -5,6 +5,7 @@ import TriviaQuestion from "./TriviaQuestion";
 const TriviaApp = () => {
   const [triviaData, setTriviaData] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     console.log("useEffect triggered due to component mount");
@@ -41,6 +42,15 @@ const TriviaApp = () => {
       .post("http://localhost:8080/checkanswers", answersObject)
       .then((response) => {
         console.log("Response from checkanswers API:", response.data);
+        const updatedTriviaData = triviaData.map((item, index) => ({
+          ...item,
+          isCorrect: response.data[index].correct,
+        }));
+        console.log("updated trivia");
+        console.log(updatedTriviaData);
+
+        setTriviaData(updatedTriviaData);
+        setIsSubmitted(true);
       })
       .catch((error) => {
         console.error("Error submitting answers:", error);
@@ -58,6 +68,7 @@ const TriviaApp = () => {
           onAnswerSelect={(questionIndex, answer) =>
             handleAnswerSelect(questionIndex, answer)
           }
+          isCorrect={isSubmitted ? item.isCorrect : null}
         />
       ))}
       <button onClick={handleSubmit}>Submit</button>
