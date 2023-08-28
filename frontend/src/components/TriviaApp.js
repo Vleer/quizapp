@@ -7,7 +7,9 @@ const TriviaApp = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
 
   useEffect(() => {
-    // Fetch questions from the API
+    console.log("useEffect triggered due to component mount");
+
+    // Fetch questions from the API only when component mounts
     axios
       .get("http://localhost:8080/questions")
       .then((response) => {
@@ -16,7 +18,7 @@ const TriviaApp = () => {
       .catch((error) => {
         console.error("Error fetching questions:", error);
       });
-  }, []);
+  }, []); // Empty dependency array means this effect runs only once
 
   const handleAnswerSelect = (questionIndex, answer) => {
     setSelectedAnswers((prevAnswers) => ({
@@ -27,6 +29,22 @@ const TriviaApp = () => {
 
   const handleSubmit = () => {
     console.log("Selected Answers:", selectedAnswers);
+
+    // Create the JSON object in the required format
+    const answersObject = {};
+    triviaData.forEach((item, index) => {
+      answersObject[index] = selectedAnswers[index];
+    });
+
+    // Perform the POST request to the API
+    axios
+      .post("http://localhost:8080/checkanswers", answersObject)
+      .then((response) => {
+        console.log("Response from checkanswers API:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error submitting answers:", error);
+      });
   };
 
   return (
