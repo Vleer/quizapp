@@ -11,6 +11,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.apache.commons.text.StringEscapeUtils;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,8 +54,33 @@ public class TriviaApiService {
     private List<TriviaQuestion> fetchRawTriviaQuestions(int amount) {
         String apiUrl = API_URL + "?amount=" + amount;
         TriviaApiResponse response = restTemplate.getForObject(apiUrl, TriviaApiResponse.class);
-        return response.getResults();
+
+        List<TriviaQuestion> decodedQuestions = new ArrayList<>();
+        for (TriviaQuestion question : response.getResults()) {
+            TriviaQuestion decodedQuestion = new TriviaQuestion();
+            decodedQuestion.setCategory(question.getCategory());
+            decodedQuestion.setType(question.getType());
+            decodedQuestion.setDifficulty(question.getDifficulty());
+
+            // Decode HTML entities in the question text
+            decodedQuestion.setQuestion(StringEscapeUtils.unescapeHtml4(question.getQuestion()));
+
+            // Decode HTML entities in the correct answer
+            decodedQuestion.setCorrect_answer(StringEscapeUtils.unescapeHtml4(question.getCorrect_answer()));
+
+            // Decode HTML entities in the incorrect answers
+            List<String> decodedIncorrectAnswers = new ArrayList<>();
+            for (String incorrectAnswer : question.getIncorrect_answers()) {
+                decodedIncorrectAnswers.add(StringEscapeUtils.unescapeHtml4(incorrectAnswer));
+            }
+            decodedQuestion.setIncorrect_answers(decodedIncorrectAnswers);
+
+            decodedQuestions.add(decodedQuestion);
+        }
+
+        return decodedQuestions;
     }
+
 
     @CacheEvict(value = "triviaData", allEntries = true) // Clears the entire cache
     public void clearTriviaCache() {
