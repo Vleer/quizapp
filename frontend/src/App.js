@@ -9,7 +9,6 @@ const triviaData = [
 function App() {
   return (
     <div className="App">
-      <h1>Trivia App</h1>
       <TriviaApp triviaData={triviaData} />
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TriviaQuestion from "./TriviaQuestion";
+import "./TriviaApp.css"; // Import your CSS file for styling
 
 const TriviaApp = () => {
   const [triviaData, setTriviaData] = useState([]);
@@ -58,20 +59,28 @@ const TriviaApp = () => {
   };
 
   return (
-    <div>
-      {triviaData.map((item, index) => (
-        <TriviaQuestion
-          key={index}
-          question={item.question}
-          answerOptions={item.answerOptions}
-          questionIndex={index} // Pass the question index to the TriviaQuestion component
-          onAnswerSelect={(questionIndex, answer) =>
-            handleAnswerSelect(questionIndex, answer)
-          }
-          isCorrect={isSubmitted ? item.isCorrect : null}
-        />
-      ))}
-      <button onClick={handleSubmit}>Submit</button>
+    <div className="trivia-app">
+      <h1 className="app-title">Trivia Quiz</h1>
+      <div className="questions-container">
+        {triviaData.map((item, index) => (
+          <TriviaQuestion
+            key={index}
+            question={item.question}
+            answerOptions={item.answerOptions}
+            questionIndex={index} // Pass the question index to the TriviaQuestion component
+            onAnswerSelect={(questionIndex, answer) =>
+              handleAnswerSelect(questionIndex, answer)
+            }
+            isCorrect={isSubmitted ? item.isCorrect : null}
+          />
+        ))}
+      </div>
+      <button className="submit-button" onClick={handleSubmit}>
+        Submit
+      </button>
+      <button className="next-button" onClick={() => window.location.reload()}>
+        Next Questions
+      </button>
     </div>
   );
 };
