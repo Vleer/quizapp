@@ -3,8 +3,10 @@ package com.example.quizapp.quizbackend.service;
 import com.example.quizapp.quizbackend.dto.TriviaAnswerDTO;
 import com.example.quizapp.quizbackend.dto.TriviaQuestionDTO;
 import com.example.quizapp.quizbackend.model.TriviaApiResponse;
+import com.example.quizapp.quizbackend.model.TriviaData;
 import com.example.quizapp.quizbackend.model.TriviaQuestion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
@@ -32,24 +34,31 @@ public class TriviaApiService {
 //        return response.getResults(); // Assuming TriviaApiResponse has a getResults() method
 //    }
 
-    @Cacheable("triviaQuestions")
-    public List<TriviaQuestionDTO> fetchTriviaQuestions(int amount) {
-        String apiUrl = API_URL + "?amount=" + amount;
-        TriviaApiResponse response = restTemplate.getForObject(apiUrl, TriviaApiResponse.class);
-        return response.getResults().stream()
+    @Cacheable("triviaData") // Cache the combined TriviaData objects
+    public TriviaData fetchTriviaData(int amount) {
+        List<TriviaQuestion> rawQuestions = fetchRawTriviaQuestions(amount);
+
+        List<TriviaQuestionDTO> questionDTOs = rawQuestions.stream()
                 .map(this::mapToQuestionDTO)
                 .collect(Collectors.toList());
-    }
 
-    @Cacheable("triviaData") // Use the same cache name for both question and answer mapping
-    public List<TriviaAnswerDTO> fetchAnswers(int amount) {
-        String apiUrl = API_URL + "?amount=" + amount;
-        TriviaApiResponse response = restTemplate.getForObject(apiUrl, TriviaApiResponse.class);
-        return response.getResults().stream()
+        List<TriviaAnswerDTO> answerDTOs = rawQuestions.stream()
                 .map(this::mapToAnswerDTO)
                 .collect(Collectors.toList());
+
+        return new TriviaData(questionDTOs, answerDTOs);
     }
 
+    private List<TriviaQuestion> fetchRawTriviaQuestions(int amount) {
+        String apiUrl = API_URL + "?amount=" + amount;
+        TriviaApiResponse response = restTemplate.getForObject(apiUrl, TriviaApiResponse.class);
+        return response.getResults();
+    }
+
+    @CacheEvict(value = "triviaData", allEntries = true) // Clears the entire cache
+    public void clearTriviaCache() {
+        // This method is empty, as we only need the annotation to trigger cache eviction
+    }
     private TriviaQuestionDTO mapToQuestionDTO(TriviaQuestion question) {
         TriviaQuestionDTO dto = new TriviaQuestionDTO();
         dto.setCategory(question.getCategory());
