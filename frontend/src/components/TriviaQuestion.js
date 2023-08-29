@@ -34,7 +34,14 @@ const TriviaQuestion = ({
                 value={option}
                 onChange={() => onAnswerSelect(questionIndex, option)}
               />
-              <span className="option-text">{option}</span>
+              <span
+                className={`option-text ${
+                  option === correctAnswer && !isCorrect
+                    ? "correct-answer-text"
+                    : ""
+                }`}>
+                {option}
+              </span>
             </label>
           </div>
         ))}

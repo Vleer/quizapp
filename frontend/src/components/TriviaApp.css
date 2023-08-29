@@ -20,7 +20,7 @@
 
 .submit-button,
 .next-button {
-    background-color: crimson;
+    background-color: #330000;
     color: #ffffff;
     padding: 10px 20px;
     border: none;
@@ -33,6 +33,6 @@
 
 .submit-button:hover,
 .next-button:hover {
-    background-color: #a52714;
+    background-color: #660000;
     /* Darker shade of red on hover */
 }

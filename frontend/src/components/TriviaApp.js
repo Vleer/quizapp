@@ -46,6 +46,7 @@ const TriviaApp = () => {
         const updatedTriviaData = triviaData.map((item, index) => ({
           ...item,
           isCorrect: response.data[index].correct,
+          correctAnswer: response.data[index].correct_answer,
         }));
         console.log("updated trivia");
         console.log(updatedTriviaData);
@@ -72,6 +73,7 @@ const TriviaApp = () => {
               handleAnswerSelect(questionIndex, answer)
             }
             isCorrect={isSubmitted ? item.isCorrect : null}
+            correctAnswer={isSubmitted ? item.correctAnswer : null}
           />
         ))}
       </div>
