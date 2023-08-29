@@ -1,5 +1,5 @@
 import React from "react";
-import "./TriviaQuestion.css"; // Import your CSS file for styling
+import "./TriviaQuestion.css";
 
 const TriviaQuestion = ({
   question,
@@ -8,17 +8,29 @@ const TriviaQuestion = ({
   onAnswerSelect,
   isCorrect,
   showResults,
+  correctAnswer,
 }) => {
+  const questionClassName =
+    isCorrect === true
+      ? "correct-question"
+      : isCorrect === false
+      ? "incorrect-question"
+      : "";
+
   return (
-    <div className="trivia-question">
+    <div className={`trivia-question ${questionClassName}`}>
       <p className="question-text">{question}</p>
       <div className="answer-options">
         {answerOptions.map((option, index) => (
-          <div className="answer-option" key={index}>
+          <div
+            className={`answer-option ${
+              option === correctAnswer && !isCorrect ? "correct-answer" : ""
+            }`}
+            key={index}>
             <label>
               <input
                 type="radio"
-                name={`answer-${questionIndex}`} // Use a unique name for each question
+                name={`answer-${questionIndex}`}
                 value={option}
                 onChange={() => onAnswerSelect(questionIndex, option)}
               />
@@ -27,8 +39,6 @@ const TriviaQuestion = ({
           </div>
         ))}
       </div>
-
-      {isCorrect !== null && <p>{isCorrect ? "Correct" : "Incorrect"}</p>}
     </div>
   );
 };
