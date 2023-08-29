@@ -2,7 +2,7 @@
 .trivia-app {
     background-color: #1a1a1a;
     color: #ffffff;
-    padding: 20px;
+    padding: 5px;
     margin: 0 auto;
     max-width: 800px;
     border-radius: 10px;
@@ -11,11 +11,11 @@
 
 .app-title {
     font-size: 28px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .questions-container {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .submit-button,
@@ -35,4 +35,64 @@
 .next-button:hover {
     background-color: #660000;
     /* Darker shade of red on hover */
+}
+/* TriviaQuestion.css */
+.trivia-question {
+    background-color: #292929;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    border: 2px solid #ccc;
+    margin: 10px;
+    display: flex; /* Display as flex container */
+    flex-direction: column; /* Stack items vertically */
+    height: 100%; /* Ensure each question container takes full height */
+    box-sizing: border-box; /* Include padding and border in the height */
+}
+
+
+.question-text {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.answer-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.answer-option {
+    margin-bottom: 8px;
+}
+
+.option-text {
+    font-size: 18px;
+    margin-left: 5px;
+}
+
+.result-text {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* TriviaQuestion.css */
+.correct-question {
+    background-color: #003300;
+    /* Dark green */
+}
+
+.incorrect-question {
+    background-color: #330000;
+    /* Dark red */
+}
+
+.correct-question {
+    background-color: #003300;
+    /* Dark green */
+}
+
+.incorrect-question {
+    background-color: #330000;
+    /* Dark red */
 }

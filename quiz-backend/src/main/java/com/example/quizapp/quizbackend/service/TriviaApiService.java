@@ -17,24 +17,17 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @EnableCaching
 @Service
 public class TriviaApiService {
     private final RestTemplate restTemplate;
-    private final static String API_URL = "https://opentdb.com/api.php";
+    private static final String API_URL = "https://opentdb.com/api.php";
 
     @Autowired
     public TriviaApiService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-
-//    public List<TriviaQuestion> fetchTriviaQuestions(int amount) {
-//        String apiUrl = API_URL + "?amount=" + amount;
-//        TriviaApiResponse response = restTemplate.getForObject(apiUrl, TriviaApiResponse.class);
-//        return response.getResults(); // Assuming TriviaApiResponse has a getResults() method
-//    }
 
     @Cacheable("triviaData") // Cache the combined TriviaData objects
     public TriviaData fetchTriviaData(int amount) {
@@ -42,11 +35,11 @@ public class TriviaApiService {
 
         List<TriviaQuestionDTO> questionDTOs = rawQuestions.stream()
                 .map(this::mapToQuestionDTO)
-                .collect(Collectors.toList());
+                .toList();
 
         List<TriviaAnswerDTO> answerDTOs = rawQuestions.stream()
                 .map(this::mapToAnswerDTO)
-                .collect(Collectors.toList());
+                .toList();
 
         return new TriviaData(questionDTOs, answerDTOs);
     }
@@ -55,30 +48,44 @@ public class TriviaApiService {
         String apiUrl = API_URL + "?amount=" + amount;
         TriviaApiResponse response = restTemplate.getForObject(apiUrl, TriviaApiResponse.class);
 
+        if (response != null && response.getResults() != null) {
+
+            return decodeTriviaQuestions(response.getResults());
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+
+    private List<TriviaQuestion> decodeTriviaQuestions(List<TriviaQuestion> questions) {
         List<TriviaQuestion> decodedQuestions = new ArrayList<>();
-        for (TriviaQuestion question : response.getResults()) {
-            TriviaQuestion decodedQuestion = new TriviaQuestion();
-            decodedQuestion.setCategory(question.getCategory());
-            decodedQuestion.setType(question.getType());
-            decodedQuestion.setDifficulty(question.getDifficulty());
-
-            // Decode HTML entities in the question text
-            decodedQuestion.setQuestion(StringEscapeUtils.unescapeHtml4(question.getQuestion()));
-
-            // Decode HTML entities in the correct answer
-            decodedQuestion.setCorrect_answer(StringEscapeUtils.unescapeHtml4(question.getCorrect_answer()));
-
-            // Decode HTML entities in the incorrect answers
-            List<String> decodedIncorrectAnswers = new ArrayList<>();
-            for (String incorrectAnswer : question.getIncorrect_answers()) {
-                decodedIncorrectAnswers.add(StringEscapeUtils.unescapeHtml4(incorrectAnswer));
-            }
-            decodedQuestion.setIncorrect_answers(decodedIncorrectAnswers);
-
+        for (TriviaQuestion question : questions) {
+            TriviaQuestion decodedQuestion = decodeSingleTriviaQuestion(question);
             decodedQuestions.add(decodedQuestion);
         }
-
         return decodedQuestions;
+    }
+
+    TriviaQuestion decodeSingleTriviaQuestion(TriviaQuestion question) {
+        TriviaQuestion decodedQuestion = new TriviaQuestion();
+        decodedQuestion.setCategory(question.getCategory());
+        decodedQuestion.setType(question.getType());
+        decodedQuestion.setDifficulty(question.getDifficulty());
+
+        // Decode HTML entities in the question text
+        decodedQuestion.setQuestion(StringEscapeUtils.unescapeHtml4(question.getQuestion()));
+
+        // Decode HTML entities in the correct answer
+        decodedQuestion.setCorrect_answer(StringEscapeUtils.unescapeHtml4(question.getCorrect_answer()));
+
+        // Decode HTML entities in the incorrect answers
+        List<String> decodedIncorrectAnswers = new ArrayList<>();
+        for (String incorrectAnswer : question.getIncorrect_answers()) {
+            decodedIncorrectAnswers.add(StringEscapeUtils.unescapeHtml4(incorrectAnswer));
+        }
+        decodedQuestion.setIncorrect_answers(decodedIncorrectAnswers);
+
+        return decodedQuestion;
     }
 
 
@@ -86,7 +93,7 @@ public class TriviaApiService {
     public void clearTriviaCache() {
         // This method is empty, as we only need the annotation to trigger cache eviction
     }
-    private TriviaQuestionDTO mapToQuestionDTO(TriviaQuestion question) {
+    TriviaQuestionDTO mapToQuestionDTO(TriviaQuestion question) {
         TriviaQuestionDTO dto = new TriviaQuestionDTO();
         dto.setCategory(question.getCategory());
         dto.setType(question.getType());
@@ -100,12 +107,10 @@ public class TriviaApiService {
         return dto;
     }
 
-    private TriviaAnswerDTO mapToAnswerDTO(TriviaQuestion question) {
+    TriviaAnswerDTO mapToAnswerDTO(TriviaQuestion question) {
         TriviaAnswerDTO dto = new TriviaAnswerDTO();
         dto.setQuestion(question.getQuestion());
         dto.setCorrect_answer(question.getCorrect_answer());
-//        dto.setUser_answer("test222");
-        // Set user_answer if applicable
         return dto;
     }
 }
