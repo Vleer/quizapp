@@ -44,5 +44,5 @@ npm start
 
 The frontend will be accessible at http://localhost:3000, and the backend at http://localhost:8080.
 
-Conclusion
+## Conclusion
 This Trivia Quiz App is a demonstration of my skills in building full-stack web applications, showcasing proficiency in React, Spring Boot, API integration, and containerization using Docker. Feel free to explore the code to see how different components work together to create a functional trivia quiz game.
