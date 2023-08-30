@@ -38,10 +38,10 @@ Manual Setup
 For the backend, navigate to the quiz-backend directory and run the Spring Boot application.
 
 For the frontend, navigate to the quiz-frontend directory and run the following commands:
-
+```
 npm install
 npm start
-
+```
 The frontend will be accessible at http://localhost:3000, and the backend at http://localhost:8080.
 
 ## Conclusion
