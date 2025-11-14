@@ -26,10 +26,24 @@ To run this project locally, you'll need Docker and Docker Compose installed.
 
 1. Clone this repository.
 2. Open a terminal and navigate to the project directory.
-3. Run the following command to start the application:
+3. Build the application:
 
+   ```bash
+   ./build.sh
    ```
-   docker-compose up
+   
+   Or manually:
+   ```bash
+   cd quiz-backend
+   ./mvnw clean package -DskipTests
+   cd ..
+   docker compose build
+   ```
+
+4. Start the application:
+
+   ```bash
+   docker compose up
    ```
 
 The frontend will be accessible at http://localhost:3000, and the backend will be accessible at http://localhost:8080.
