@@ -24,20 +24,14 @@ This is a simple project developed to demonstrate my programming abilities in bu
 
 To run this project locally, you'll need Docker and Docker Compose installed.
 
+### Quick Start
+
 1. Clone this repository.
 2. Open a terminal and navigate to the project directory.
-3. Build the application:
+3. Build the backend JAR file:
 
    ```bash
    ./build.sh
-   ```
-   
-   Or manually:
-   ```bash
-   cd quiz-backend
-   ./mvnw clean package -DskipTests
-   cd ..
-   docker compose build
    ```
 
 4. Start the application:
@@ -48,15 +42,39 @@ To run this project locally, you'll need Docker and Docker Compose installed.
 
 The frontend will be accessible at http://localhost:3000, and the backend will be accessible at http://localhost:8080.
 
-Manual Setup
-For the backend, navigate to the quiz-backend directory and run the Spring Boot application.
+### Alternative: Manual Build
+
+If you prefer to build manually:
+
+```bash
+# Build the backend JAR
+cd quiz-backend
+./mvnw clean package -DskipTests
+cd ..
+
+# Build and start Docker containers
+docker compose up --build
+```
+
+### Manual Setup (Without Docker)
+
+For the backend, navigate to the quiz-backend directory and run the Spring Boot application:
+
+```bash
+cd quiz-backend
+./mvnw spring-boot:run
+```
 
 For the frontend, navigate to the quiz-frontend directory and run the following commands:
-```
+
+```bash
+cd quiz-frontend
 npm install
 npm start
 ```
+
 The frontend will be accessible at http://localhost:3000, and the backend at http://localhost:8080.
 
 ## Conclusion
+
 This Trivia Quiz App is a demonstration of my skills in building full-stack web applications, showcasing proficiency in React, Spring Boot, API integration, and containerization using Docker. Feel free to explore the code to see how different components work together to create a functional trivia quiz game.

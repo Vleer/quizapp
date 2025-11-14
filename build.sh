@@ -11,7 +11,8 @@ chmod +x mvnw
 ./mvnw clean package -DskipTests
 cd ..
 
-echo "Building Docker images..."
-docker compose build
-
-echo "Build complete! Run 'docker compose up' to start the application."
+echo "Backend JAR built successfully!"
+echo ""
+echo "Now you can:"
+echo "  - Build Docker images: docker compose build"
+echo "  - Or start the application directly: docker compose up"

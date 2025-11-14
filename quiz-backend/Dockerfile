@@ -1,16 +1,16 @@
 # Dockerfile for Spring Boot Backend
 # This Dockerfile expects the JAR to be pre-built
-# Build the JAR first with: ./mvnw clean package -DskipTests
-# Or use the build.sh script in the root directory
+# Run the build script first: ./build.sh
+# Or build manually: cd quiz-backend && ./mvnw clean package -DskipTests
 
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # Copy the pre-built JAR file
-COPY target/*.jar /app/app.jar
+COPY target/*.jar app.jar
 
 # Expose Spring Boot default port
 EXPOSE 8080
 
 # Start the application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
