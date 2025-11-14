@@ -1,5 +1,5 @@
 # Use an official Node runtime as the base image
-FROM node:14 as build-stage
+FROM node:18 as build-stage
 
 # Set the working directory inside the container
 WORKDIR /app

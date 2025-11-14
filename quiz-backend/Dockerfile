@@ -1,14 +1,27 @@
 # Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-alpine as build-stage
+# Build stage: build the Spring Boot app with Maven
+FROM maven:3.8.8-openjdk-17-slim AS build
+WORKDIR /build
 
-# Set the working directory inside the container
+# Copy only Maven files first to leverage layer caching
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+
+# Copy source code
+COPY src ./src
+
+# Build the project (skip tests to keep build fast in CI/dev)
+RUN mvn -B -DskipTests package
+
+# Runtime stage: use a small JRE image
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
-# Copy the compiled JAR file into the container
-COPY target/quiz-backend-*.jar /app/app.jar
+# Copy the fat jar from the build stage
+COPY --from=build /build/target/*.jar /app/app.jar
 
-# Expose the port that your Spring Boot app runs on
+# Expose Spring Boot default port
 EXPOSE 8080
 
-# Run the Spring Boot app
-CMD ["java", "-jar", "app.jar"]
+# Start the application
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
