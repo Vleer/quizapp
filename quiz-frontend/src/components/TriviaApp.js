@@ -3,6 +3,10 @@ import axios from "axios";
 import TriviaQuestion from "./TriviaQuestion";
 import "./TriviaApp.css"; // Import your CSS file for styling
 
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL ||
+  `http://${window.location.hostname}:8081`;
+
 const TriviaApp = () => {
   const [triviaData, setTriviaData] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -13,7 +17,7 @@ const TriviaApp = () => {
 
     // Fetch questions from the API only when component mounts
     axios
-      .get("http://localhost:8080/questions")
+      .get(`${API_BASE_URL}/questions`)
       .then((response) => {
         setTriviaData(response.data);
       })
@@ -40,7 +44,7 @@ const TriviaApp = () => {
 
     // Perform the POST request to the API
     axios
-      .post("http://localhost:8080/checkanswers", answersObject)
+      .post(`${API_BASE_URL}/checkanswers`, answersObject)
       .then((response) => {
         console.log("Response from checkanswers API:", response.data);
         const updatedTriviaData = triviaData.map((item, index) => ({
