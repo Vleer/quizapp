@@ -3,9 +3,7 @@ import axios from "axios";
 import TriviaQuestion from "./TriviaQuestion";
 import "./TriviaApp.css"; // Import your CSS file for styling
 
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL ||
-  `http://${window.location.hostname}:8081`;
+const API_BASE_URL = "/api";
 
 const TriviaApp = () => {
   const [triviaData, setTriviaData] = useState([]);

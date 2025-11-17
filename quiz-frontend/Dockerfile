@@ -16,20 +16,17 @@ COPY . .
 # Build the React app
 RUN npm run build
 
-# Use a lightweight Node runtime for serving the production build
-FROM node:18-slim
+# Use nginx to serve the static files
+FROM nginx:alpine
 
-# Set the working directory inside the container
-WORKDIR /app
+# Copy the built React app to nginx
+COPY --from=build-stage /app/build /usr/share/nginx/html
 
-# Copy the built React app from the previous stage
-COPY --from=build-stage /app/build .
-
-# Install a simple HTTP server to serve the static content
-RUN npm install -g serve
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 3000
 EXPOSE 3000
 
-# Command to start the server
-CMD ["serve", "-p", "3000", "-s", "."]
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
