@@ -34,12 +34,15 @@ const TriviaApp = () => {
   const handleAnswerSelect = useCallback((answer) => {
     if (isAnswered) return; // Prevent changing answer after submission
     
+    const currentQuestion = triviaData[currentQuestionIndex];
+    if (!currentQuestion) return;
+    
     setSelectedAnswer(answer);
     setIsAnswered(true);
 
-    // Check the answer
+    // Check the answer using the question hash
     const answersObject = {
-      0: answer,
+      [currentQuestion.questionHash]: answer,
     };
 
     axios
@@ -47,7 +50,7 @@ const TriviaApp = () => {
       .then((response) => {
         const result = response.data[0];
         setCorrectAnswer(result.correct_answer);
-        if (result.correct) {
+        if (result.isCorrect) {
           setScore((prev) => prev + 1);
         }
         setTotalAnswered((prev) => prev + 1);
@@ -55,7 +58,7 @@ const TriviaApp = () => {
       .catch((error) => {
         console.error("Error checking answer:", error);
       });
-  }, [isAnswered]);
+  }, [isAnswered, triviaData, currentQuestionIndex]);
 
   const handleNextQuestion = useCallback(() => {
     if (!isAnswered) return;

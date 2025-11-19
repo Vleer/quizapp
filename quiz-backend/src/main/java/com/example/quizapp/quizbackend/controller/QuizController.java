@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @CrossOrigin(
@@ -34,26 +34,21 @@ public class QuizController {
 
     @GetMapping("/questions")
     public List<TriviaQuestionDTO> triviaQuestions() {
-        triviaApiService.clearTriviaCache();
-        return triviaApiService.fetchTriviaData(5).getQuestionDTOs();
+        return triviaApiService.fetchTriviaQuestions(5);
     }
 
     @PostMapping("/checkanswers")
     public ResponseEntity<List<TriviaAnswerDTO>> checkAnswers(@RequestBody Map<String, String> userAnswers) {
-        List<TriviaAnswerDTO> answers = triviaApiService.fetchTriviaData(userAnswers.size()).getAnswerDTOs();
-        // Check answers for a list of TriviaQuestionDTO objects
-
+        List<TriviaAnswerDTO> results = new ArrayList<>();
+        
         for (Map.Entry<String, String> entry : userAnswers.entrySet()) {
-            int questionIndex = Integer.parseInt(entry.getKey());
-
-            if (questionIndex >= 0 && questionIndex < answers.size()) {
-                TriviaAnswerDTO answerDTO = answers.get(questionIndex);
-                answerDTO.setUser_answer(entry.getValue());
-                if(Objects.equals(answerDTO.getCorrect_answer(), answerDTO.getUser_answer())){
-                    answerDTO.setCorrect(true);
-                }
-            }
+            String questionHash = entry.getKey();
+            String userAnswer = entry.getValue();
+            
+            TriviaAnswerDTO result = triviaApiService.validateAnswer(questionHash, userAnswer);
+            results.add(result);
         }
-        return ResponseEntity.ok(answers);
+        
+        return ResponseEntity.ok(results);
     }
 }

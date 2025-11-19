@@ -12,5 +12,6 @@ public class TriviaQuestionDTO {
     private String difficulty;
     private String question;
     private List<String> answerOptions; // Merged correct and incorrect answers
+    private String questionHash; // Hash to validate answer without storing state
 
 }
