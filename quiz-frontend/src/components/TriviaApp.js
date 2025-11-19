@@ -80,12 +80,14 @@ const TriviaApp = () => {
           />
         ))}
       </div>
-      <button className="submit-button" onClick={handleSubmit}>
-        Submit
-      </button>
-      <button className="next-button" onClick={() => window.location.reload()}>
-        Next Questions
-      </button>
+      <div className="controls-container">
+        <button className="submit-button" onClick={handleSubmit}>
+          Submit
+        </button>
+        <button className="next-button" onClick={() => window.location.reload()}>
+          Next Questions
+        </button>
+      </div>
     </div>
   );
 };

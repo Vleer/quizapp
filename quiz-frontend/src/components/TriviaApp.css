@@ -2,97 +2,81 @@
 .trivia-app {
     background-color: #1a1a1a;
     color: #ffffff;
-    padding: 5px;
-    margin: 0 auto;
-    max-width: 800px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent body scroll on desktop */
 }
 
 .app-title {
-    font-size: 28px;
-    margin-bottom: 5px;
+    font-size: 24px;
+    text-align: center;
+    padding: 10px 0;
+    margin: 0;
+    background-color: #222;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    z-index: 10;
 }
 
 .questions-container {
-    margin-bottom: 5px;
+    flex: 1;
+    overflow-y: auto; /* Scroll within container if needed */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.controls-container {
+    padding: 15px;
+    background-color: #222;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.3);
+    z-index: 10;
 }
 
 .submit-button,
 .next-button {
-    background-color: #330000;
+    background-color: #800000;
     color: #ffffff;
-    padding: 10px 20px;
+    padding: 12px 30px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 18px;
-    transition: background-color 0.3s ease-in-out;
-    margin-right: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .submit-button:hover,
 .next-button:hover {
-    background-color: #660000;
-    /* Darker shade of red on hover */
-}
-/* TriviaQuestion.css */
-.trivia-question {
-    background-color: #292929;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-    border: 2px solid #ccc;
-    margin: 10px;
-    display: flex; /* Display as flex container */
-    flex-direction: column; /* Stack items vertically */
-    height: 100%; /* Ensure each question container takes full height */
-    box-sizing: border-box; /* Include padding and border in the height */
+    background-color: #a00000;
 }
 
+/* Mobile Layout Overrides */
+@media (max-width: 768px) {
+    .trivia-app {
+        height: auto; /* Allow full page scroll on mobile */
+        min-height: 100vh;
+        overflow: visible;
+    }
 
-.question-text {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+    .questions-container {
+        overflow-y: visible;
+        padding: 10px;
+    }
 
-.answer-options {
-    display: flex;
-    flex-direction: column;
-}
-
-.answer-option {
-    margin-bottom: 8px;
-}
-
-.option-text {
-    font-size: 18px;
-    margin-left: 5px;
-}
-
-.result-text {
-    font-size: 16px;
-    margin-top: 10px;
-}
-
-/* TriviaQuestion.css */
-.correct-question {
-    background-color: #003300;
-    /* Dark green */
-}
-
-.incorrect-question {
-    background-color: #330000;
-    /* Dark red */
-}
-
-.correct-question {
-    background-color: #003300;
-    /* Dark green */
-}
-
-.incorrect-question {
-    background-color: #330000;
-    /* Dark red */
+    .controls-container {
+        position: sticky;
+        bottom: 0;
+        padding: 15px;
+    }
 }
