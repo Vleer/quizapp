@@ -6,6 +6,7 @@ import com.example.quizapp.quizbackend.service.TriviaApiService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,13 @@ import java.util.Map;
 import java.util.Objects;
 
 @RestController
+@CrossOrigin(
+    origins = {"http://localhost:3000", "http://quizapp.local", "http://127.0.0.1:3000"},
+    allowCredentials = "true",
+    methods = {org.springframework.web.bind.annotation.RequestMethod.GET, 
+               org.springframework.web.bind.annotation.RequestMethod.POST,
+               org.springframework.web.bind.annotation.RequestMethod.OPTIONS}
+)
 public class QuizController {
     private final TriviaApiService triviaApiService;
 

@@ -3,7 +3,8 @@ import axios from "axios";
 import TriviaQuestion from "./TriviaQuestion";
 import "./TriviaApp.css"; // Import your CSS file for styling
 
-const API_BASE_URL = "/api";
+// Use relative URLs through Ingress: /api will route to backend
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "/api";
 
 const TriviaApp = () => {
   const [triviaData, setTriviaData] = useState([]);

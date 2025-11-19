@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@EnableCaching
 @Service
 public class TriviaApiService {
     private final RestTemplate restTemplate;
