@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @RestController
 @CrossOrigin(
-    origins = {"http://localhost:3000", "http://quizapp.local", "http://127.0.0.1:3000"},
+    origins = {"http://localhost:3000", "http://quizapp.local", "http://quizapp-develop.local", "http://127.0.0.1:3000", "http://192.168.0.24:30003"},
     allowCredentials = "true",
     methods = {org.springframework.web.bind.annotation.RequestMethod.GET, 
                org.springframework.web.bind.annotation.RequestMethod.POST,

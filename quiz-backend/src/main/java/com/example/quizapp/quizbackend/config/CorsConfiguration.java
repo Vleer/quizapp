@@ -15,7 +15,9 @@ public class CorsConfiguration implements WebMvcConfigurer {
                 .allowedOrigins(
                     "http://localhost:3000",      // For local development
                     "http://quizapp.local",        // For Kubernetes Ingress
-                    "http://127.0.0.1:3000"        // Alternative localhost
+                    "http://quizapp-develop.local", // For Kubernetes Ingress (develop)
+                    "http://127.0.0.1:3000",       // Alternative localhost
+                    "http://192.168.0.24:30003"    // NodePort access
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
