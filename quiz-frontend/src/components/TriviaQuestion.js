@@ -4,21 +4,29 @@ import "./TriviaQuestion.css";
 const TriviaQuestion = ({
   question,
   answerOptions,
-  questionIndex,
+  selectedAnswer,
   onAnswerSelect,
-  isCorrect,
-  showResults,
+  isAnswered,
   correctAnswer,
+  onHoverAnswer,
 }) => {
-  const questionClassName =
-    isCorrect === true
-      ? "correct-question"
-      : isCorrect === false
-      ? "incorrect-question"
-      : "";
+  const getAnswerClassName = (option) => {
+    if (!isAnswered) {
+      return option === selectedAnswer ? "selected" : "";
+    }
+    
+    // After answered
+    if (option === correctAnswer) {
+      return "correct-answer";
+    }
+    if (option === selectedAnswer && option !== correctAnswer) {
+      return "incorrect-answer";
+    }
+    return "";
+  };
 
   return (
-    <div className={`trivia-question ${questionClassName}`}>
+    <div className="trivia-question">
       <div className="question-side">
         <p className="question-text">{question}</p>
       </div>
@@ -26,24 +34,22 @@ const TriviaQuestion = ({
         <div className="answer-options">
           {answerOptions.map((option, index) => (
             <div
-              className={`answer-option ${
-                option === correctAnswer && !isCorrect ? "correct-answer" : ""
-              }`}
-              key={index}>
+              className={`answer-option ${getAnswerClassName(option)}`}
+              key={index}
+              onClick={() => !isAnswered && onAnswerSelect(option)}
+              onMouseEnter={() => !isAnswered && onHoverAnswer(option)}
+            >
               <label className="answer-label">
                 <input
                   type="radio"
-                  name={`answer-${questionIndex}`}
+                  name="answer"
                   value={option}
-                  onChange={() => onAnswerSelect(questionIndex, option)}
+                  checked={selectedAnswer === option}
+                  onChange={() => !isAnswered && onAnswerSelect(option)}
                   className="answer-input"
+                  disabled={isAnswered}
                 />
-                <span
-                  className={`option-text ${
-                    option === correctAnswer && !isCorrect
-                      ? "correct-answer-text"
-                      : ""
-                  }`}>
+                <span className="option-text">
                   {option}
                 </span>
               </label>

@@ -91,6 +91,7 @@
     transition: all 0.2s ease-out;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .answer-option:hover {
@@ -98,6 +99,40 @@
     border-color: #8a4b38;
     transform: translateX(5px);
     box-shadow: -2px 2px 5px rgba(0,0,0,0.05);
+}
+
+.answer-option.selected {
+    background-color: rgba(197, 160, 89, 0.3);
+    border-color: #c5a059;
+    border-width: 2px;
+    transform: translateX(8px);
+    box-shadow: -3px 3px 8px rgba(0,0,0,0.15);
+}
+
+.answer-option.correct-answer {
+    background-color: rgba(165, 214, 167, 0.5) !important;
+    border-color: #2e7d32 !important;
+    border-width: 2px;
+    animation: correctPulse 0.5s ease;
+}
+
+.answer-option.incorrect-answer {
+    background-color: rgba(239, 154, 154, 0.5) !important;
+    border-color: #c62828 !important;
+    border-width: 2px;
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes correctPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
 }
 
 .answer-label {

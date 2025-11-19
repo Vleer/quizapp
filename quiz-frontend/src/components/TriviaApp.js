@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import TriviaQuestion from "./TriviaQuestion";
 import "./TriviaApp.css"; // Import your CSS file for styling
@@ -8,13 +8,19 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "/api";
 
 const TriviaApp = () => {
   const [triviaData, setTriviaData] = useState([]);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState(null);
+  const [score, setScore] = useState(0);
+  const [totalAnswered, setTotalAnswered] = useState(0);
 
+  // Fetch initial questions
   useEffect(() => {
-    console.log("useEffect triggered due to component mount");
+    fetchQuestions();
+  }, []);
 
-    // Fetch questions from the API only when component mounts
+  const fetchQuestions = () => {
     axios
       .get(`${API_BASE_URL}/questions`)
       .then((response) => {
@@ -23,70 +29,134 @@ const TriviaApp = () => {
       .catch((error) => {
         console.error("Error fetching questions:", error);
       });
-  }, []); // Empty dependency array means this effect runs only once
-
-  const handleAnswerSelect = (questionIndex, answer) => {
-    setSelectedAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [questionIndex]: answer,
-    }));
   };
 
-  const handleSubmit = () => {
-    console.log("Selected Answers:", selectedAnswers);
+  const handleAnswerSelect = useCallback((answer) => {
+    if (isAnswered) return; // Prevent changing answer after submission
+    
+    setSelectedAnswer(answer);
+    setIsAnswered(true);
 
-    // Create the JSON object in the required format
-    const answersObject = {};
-    triviaData.forEach((item, index) => {
-      answersObject[index] = selectedAnswers[index];
-    });
+    // Check the answer
+    const answersObject = {
+      0: answer,
+    };
 
-    // Perform the POST request to the API
     axios
       .post(`${API_BASE_URL}/checkanswers`, answersObject)
       .then((response) => {
-        console.log("Response from checkanswers API:", response.data);
-        const updatedTriviaData = triviaData.map((item, index) => ({
-          ...item,
-          isCorrect: response.data[index].correct,
-          correctAnswer: response.data[index].correct_answer,
-        }));
-        console.log("updated trivia");
-        console.log(updatedTriviaData);
-
-        setTriviaData(updatedTriviaData);
-        setIsSubmitted(true);
+        const result = response.data[0];
+        setCorrectAnswer(result.correct_answer);
+        if (result.correct) {
+          setScore((prev) => prev + 1);
+        }
+        setTotalAnswered((prev) => prev + 1);
       })
       .catch((error) => {
-        console.error("Error submitting answers:", error);
+        console.error("Error checking answer:", error);
       });
-  };
+  }, [isAnswered]);
+
+  const handleNextQuestion = useCallback(() => {
+    if (!isAnswered) return;
+
+    const nextIndex = currentQuestionIndex + 1;
+
+    if (nextIndex < triviaData.length) {
+      // Move to next question
+      setCurrentQuestionIndex(nextIndex);
+      setSelectedAnswer(null);
+      setIsAnswered(false);
+      setCorrectAnswer(null);
+    } else {
+      // Need to fetch more questions
+      fetchQuestions();
+      setCurrentQuestionIndex(0);
+      setSelectedAnswer(null);
+      setIsAnswered(false);
+      setCorrectAnswer(null);
+    }
+  }, [currentQuestionIndex, triviaData.length, isAnswered]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      const currentQuestion = triviaData[currentQuestionIndex];
+      if (!currentQuestion) return;
+
+      const answers = currentQuestion.answerOptions;
+      const currentIndex = selectedAnswer ? answers.indexOf(selectedAnswer) : -1;
+
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        if (!selectedAnswer && currentIndex === -1) {
+          // No answer selected, select first option
+          handleAnswerSelect(answers[0]);
+        } else if (isAnswered) {
+          // Answer already submitted, move to next question
+          handleNextQuestion();
+        } else if (selectedAnswer) {
+          // Answer selected but not submitted, submit it
+          // (Already auto-submitted on selection, so just prevent default)
+        }
+      } else if ((e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') && !isAnswered) {
+        e.preventDefault();
+        const newIndex = currentIndex > 0 ? currentIndex - 1 : answers.length - 1;
+        setSelectedAnswer(answers[newIndex]);
+      } else if ((e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') && !isAnswered) {
+        e.preventDefault();
+        const newIndex = currentIndex < answers.length - 1 ? currentIndex + 1 : 0;
+        setSelectedAnswer(answers[newIndex]);
+      } else if ((e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') && !isAnswered) {
+        e.preventDefault();
+        const newIndex = currentIndex > 0 ? currentIndex - 1 : answers.length - 1;
+        setSelectedAnswer(answers[newIndex]);
+      } else if ((e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') && !isAnswered) {
+        e.preventDefault();
+        const newIndex = currentIndex < answers.length - 1 ? currentIndex + 1 : 0;
+        setSelectedAnswer(answers[newIndex]);
+      } else if (e.key === 'Enter' && selectedAnswer && !isAnswered) {
+        e.preventDefault();
+        handleAnswerSelect(selectedAnswer);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [triviaData, currentQuestionIndex, selectedAnswer, isAnswered, handleAnswerSelect, handleNextQuestion]);
+
+  const currentQuestion = triviaData[currentQuestionIndex];
 
   return (
     <div className="trivia-app">
       <h1 className="app-title">Trivia Quiz</h1>
+      <div className="score-display">
+        Score: {score} / {totalAnswered}
+      </div>
       <div className="questions-container">
-        {triviaData.map((item, index) => (
+        {currentQuestion ? (
           <TriviaQuestion
-            key={index}
-            question={item.question}
-            answerOptions={item.answerOptions}
-            questionIndex={index} // Pass the question index to the TriviaQuestion component
-            onAnswerSelect={(questionIndex, answer) =>
-              handleAnswerSelect(questionIndex, answer)
-            }
-            isCorrect={isSubmitted ? item.isCorrect : null}
-            correctAnswer={isSubmitted ? item.correctAnswer : null}
+            question={currentQuestion.question}
+            answerOptions={currentQuestion.answerOptions}
+            selectedAnswer={selectedAnswer}
+            onAnswerSelect={handleAnswerSelect}
+            isAnswered={isAnswered}
+            correctAnswer={correctAnswer}
+            onHoverAnswer={setSelectedAnswer}
           />
-        ))}
+        ) : (
+          <p>Loading questions...</p>
+        )}
       </div>
       <div className="controls-container">
-        <button className="submit-button" onClick={handleSubmit}>
-          Submit
-        </button>
-        <button className="next-button" onClick={() => window.location.reload()}>
-          Next Questions
-        </button>
+        {isAnswered && (
+          <button className="next-button" onClick={handleNextQuestion}>
+            Next Question (Space)
+          </button>
+        )}
+      </div>
+      <div className="help-text">
+        Navigate: W/A/S/D or Arrow Keys | Select: Click or Space | Next: Space
       </div>
     </div>
   );
