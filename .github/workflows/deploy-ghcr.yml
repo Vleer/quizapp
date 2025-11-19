@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
   workflow_dispatch:
 
 env:
@@ -59,8 +60,8 @@ jobs:
           file: ./quiz-backend/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.BACKEND_IMAGE }}:latest
             ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.BACKEND_IMAGE }}:${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -97,8 +98,8 @@ jobs:
           file: ./quiz-frontend/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.FRONTEND_IMAGE }}:latest
             ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.FRONTEND_IMAGE }}:${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -118,7 +119,13 @@ jobs:
 
       - name: Update deployment manifests
         run: |
-          cd infra/apps/quizapp
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
+            APP_DIR="apps/quizapp"
+          else
+            APP_DIR="apps/quizapp-develop"
+          fi
+          
+          cd infra/$APP_DIR
           
           # Get the lowercase repo owner from the first job
           REPO_OWNER_LOWER="${GITHUB_REPOSITORY_OWNER,,}"
@@ -130,7 +137,7 @@ jobs:
           sed -i "s|image: .*quiz-frontend.*|image: ${{ env.REGISTRY }}/${REPO_OWNER_LOWER}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}|g" deployment.yaml
           
           # Show the changes
-          echo "Updated deployment.yaml:"
+          echo "Updated deployment.yaml in $APP_DIR:"
           cat deployment.yaml
 
       - name: Commit and push changes
@@ -139,12 +146,18 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          git add apps/quizapp/deployment.yaml
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
+            APP_DIR="apps/quizapp"
+          else
+            APP_DIR="apps/quizapp-develop"
+          fi
+          
+          git add $APP_DIR/deployment.yaml
           
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update quizapp images to ${{ github.sha }}"
+            git commit -m "Update quizapp ($APP_DIR) images to ${{ github.sha }}"
             git push
             echo "### Manifest Update :white_check_mark:" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
