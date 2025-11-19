@@ -2,11 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@700&display=swap');
 
 .trivia-app {
-    background-color: #d2b48c; /* Warm beige/tan base */
+    /* Dark Wood Desk Background */
+    background-color: #1a120b;
     background-image: 
-        url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E"),
-        linear-gradient(to bottom right, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
-    color: #2c1b18; /* Deep ink color */
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 20px),
+        radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 80%);
+    color: #2a1f1d; /* Iron Gall Ink */
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -17,20 +19,20 @@
 
 .app-title {
     font-family: 'Cinzel Decorative', cursive;
-    font-size: 36px;
+    font-size: 42px;
     text-align: center;
-    padding: 20px 0;
+    padding: 25px 0;
     margin: 0;
-    background-color: #3e2723; /* Dark wood */
-    background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-    color: #e6c9a8; /* Gold/Parchment text */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    /* Dark Leather Header */
+    background-color: #2d1b0e;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
+    color: #c5a059; /* Faded Gold */
+    box-shadow: 0 5px 20px rgba(0,0,0,0.6);
     z-index: 10;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    border-bottom: 4px solid #1a100e;
-    letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    border-bottom: 1px solid #3e2723;
+    border-top: 4px solid #1a120b;
+    letter-spacing: 3px;
 }
 
 .questions-container {
@@ -39,79 +41,77 @@
     padding: 40px 20px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    max-width: 1000px;
+    gap: 40px;
+    max-width: 900px;
     margin: 0 auto;
     width: 100%;
-    /* Scrollbar styling for webkit */
+    /* Scrollbar styling */
     scrollbar-width: thin;
-    scrollbar-color: #5d4037 #d7ccc8;
+    scrollbar-color: #8d6e63 #2d1b0e;
 }
 
 .questions-container::-webkit-scrollbar {
-    width: 10px;
+    width: 12px;
 }
 
 .questions-container::-webkit-scrollbar-track {
-    background: #d7ccc8;
+    background: #1a120b;
+    border-left: 1px solid #3e2723;
 }
 
 .questions-container::-webkit-scrollbar-thumb {
     background-color: #5d4037;
-    border-radius: 6px;
-    border: 2px solid #d7ccc8;
+    border-radius: 10px;
+    border: 3px solid #1a120b;
 }
 
 .controls-container {
-    padding: 25px;
-    background-color: #3e2723; /* Dark wood */
+    padding: 30px;
+    /* Dark Leather Footer */
+    background-color: #2d1b0e;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
     display: flex;
     justify-content: center;
-    gap: 30px;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+    gap: 40px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
     z-index: 10;
-    border-top: 4px solid #1a100e;
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%235d4037' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+    border-top: 1px solid #3e2723;
 }
 
 .submit-button,
 .next-button {
-    background: #f4e1c1; /* Parchment button */
-    color: #3e2723;
-    padding: 12px 35px;
-    border: 2px solid #3e2723;
-    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* Hand-drawn shape */
+    background: #e6d2b5; /* Light Parchment */
+    color: #2a1f1d;
+    padding: 14px 40px;
+    border: none;
+    /* Wax Seal / Stamp shape */
+    border-radius: 2px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
     font-family: 'Cinzel Decorative', cursive;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 
+        inset 0 0 20px rgba(139, 69, 19, 0.2),
+        0 5px 10px rgba(0,0,0,0.4);
+    transition: all 0.2s ease;
     position: relative;
-    overflow: hidden;
-}
-
-.submit-button::before,
-.next-button::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.05);
-    opacity: 0;
-    transition: opacity 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
 }
 
 .submit-button:hover,
 .next-button:hover {
-    transform: scale(1.05) rotate(-1deg);
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.4);
-    background-color: #fff8e1;
+    transform: translateY(-2px);
+    box-shadow: 
+        inset 0 0 10px rgba(139, 69, 19, 0.1),
+        0 8px 15px rgba(0,0,0,0.5);
+    background-color: #f0e6d2;
+    color: #000;
 }
 
 .submit-button:active,
 .next-button:active {
-    transform: scale(0.95);
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 /* Mobile Layout Overrides */

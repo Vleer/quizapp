@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Definitions for Colors, Patterns, and Shadows --><defs>
+    <!-- Parchment Background Color --><linearGradient id="parchmentGradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#DDC295" /> <!-- Light Tan --><stop offset="100%" stop-color="#B88A58" /> <!-- Medium Brown --></linearGradient>
+
+    <!-- Inner "Ink" Color for Question Mark --><linearGradient id="inkGradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4A3F33" /> <!-- Dark Brown --><stop offset="100%" stop-color="#2F251E" /> <!-- Very Dark Brown --></linearGradient>
+
+    <!-- Subtle Texture Pattern (like paper fibers) --><pattern id="parchmentTexture" patternUnits="userSpaceOnUse" width="10" height="10">
+      <circle cx="2" cy="2" r="0.5" fill="#C4A076" opacity="0.4"/>
+      <circle cx="7" cy="6" r="0.6" fill="#C4A076" opacity="0.3"/>
+      <circle cx="4" cy="9" r="0.4" fill="#C4A076" opacity="0.5"/>
+    </pattern>
+    
+    <!-- Shadow for depth, but softer and less pronounced than modern style --><filter id="oldPaperShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6" />
+      <feOffset dx="0" dy="3" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background: Rounded Squircle, now with parchment gradient and a slight border --><rect x="32" y="32" width="448" height="448" rx="110" fill="url(#parchmentGradient)" filter="url(#oldPaperShadow)"/>
+  <rect x="38" y="38" width="436" height="436" rx="105" fill="url(#parchmentTexture)" opacity="0.5" />
+  
+  <!-- Main Icon: Speech Bubble Shape (now more like a weathered scroll or talk bubble) --><path d="M256 110C176.5 110 112 174.5 112 254C112 299.6 133.2 339.5 166.5 365.5C168 366.7 168.8 368.6 168.5 370.5L162 412C161 418 167.5 422.5 173 419L226 394C228 393 230 392.8 232.5 393.2C240.2 394.3 248 395 256 395C335.5 395 400 330.5 400 251C400 171.5 335.5 110 256 110Z" 
+        fill="#F0E0C0"  <!-- Lighter cream for the bubble itself -->filter="url(#oldPaperShadow)"/>
+
+  <!-- Question Mark: Calligraphic style, filled with dark "ink" gradient --><path d="M256 340C240 340 228 328 228 312C228 296 240 284 256 284C272 284 284 296 284 312C284 328 272 340 256 340ZM256 150C285 150 306 171 306 200C306 215 298 227 286 235C278 240 274 245 274 253V260C274 266 269 271 262 271C255 271 250 266 250 260V250C250 234 258 222 270 214C276 210 279 206 279 200C279 190 271 182 262 182C253 182 245 190 245 200C245 206 240 211 234 211C228 211 223 206 223 200C223 171 244 150 256 150Z" 
+        fill="url(#inkGradient)"/>
+</svg>
