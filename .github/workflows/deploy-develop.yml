@@ -1,9 +1,8 @@
-name: Deploy Quiz App to Kubernetes (GHCR)
+name: Deploy Quiz App Develop to Kubernetes (GHCR)
 
 on:
   push:
     branches:
-      - main
       - develop
   workflow_dispatch:
 
@@ -61,7 +60,7 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
-            ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.BACKEND_IMAGE }}:${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
+            ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.BACKEND_IMAGE }}:develop
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -99,7 +98,7 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
-            ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.FRONTEND_IMAGE }}:${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
+            ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.FRONTEND_IMAGE }}:develop
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -119,11 +118,7 @@ jobs:
 
       - name: Update deployment manifests
         run: |
-          if [[ "${{ github.ref_name }}" == "main" ]]; then
-            APP_DIR="apps/quizapp"
-          else
-            APP_DIR="apps/quizapp-develop"
-          fi
+          APP_DIR="apps/quizapp-develop"
           
           cd infra/$APP_DIR
           
@@ -146,18 +141,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          if [[ "${{ github.ref_name }}" == "main" ]]; then
-            APP_DIR="apps/quizapp"
-          else
-            APP_DIR="apps/quizapp-develop"
-          fi
+          APP_DIR="apps/quizapp-develop"
           
           git add $APP_DIR/deployment.yaml
           
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update quizapp ($APP_DIR) images to ${{ github.sha }}"
+            git commit -m "Update quizapp-develop images to ${{ github.sha }}"
             git push
             echo "### Manifest Update :white_check_mark:" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
@@ -173,4 +164,4 @@ jobs:
           echo "**Backend Image:** \`${{ env.REGISTRY }}/${REPO_OWNER_LOWER}/${{ env.BACKEND_IMAGE }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Frontend Image:** \`${{ env.REGISTRY }}/${REPO_OWNER_LOWER}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "The application should be available at: http://quizapp.local" >> $GITHUB_STEP_SUMMARY
+          echo "The application should be available at: http://quizapp-develop.local" >> $GITHUB_STEP_SUMMARY
