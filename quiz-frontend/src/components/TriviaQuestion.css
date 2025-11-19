@@ -1,79 +1,120 @@
 .trivia-question {
     background-color: #fdfbf7; /* Paper color */
-    border-radius: 2px;
-    padding: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* Irregular hand-drawn shape */
+    padding: 30px;
     box-shadow: 
-        1px 1px 0 rgba(0,0,0,0.1),
-        3px 3px 8px rgba(0,0,0,0.15),
-        inset 0 0 30px rgba(139, 69, 19, 0.05); /* Aged paper inner shadow */
-    border: 1px solid #d7ccc8;
-    margin-bottom: 20px;
+        2px 3px 5px rgba(0,0,0,0.1),
+        10px 10px 20px rgba(0,0,0,0.05); /* Soft natural shadow */
+    border: 2px solid transparent; /* Placeholder for border image or just use shadow */
+    margin-bottom: 30px;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
     position: relative;
+    overflow: hidden; /* For ink effects */
+}
+
+/* Hand-drawn border effect using box-shadow */
+.trivia-question::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    border: 1px solid rgba(62, 39, 35, 0.3);
+    pointer-events: none;
 }
 
 .trivia-question:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px) rotate(0.5deg);
     box-shadow: 
-        1px 1px 0 rgba(0,0,0,0.1),
-        5px 5px 15px rgba(0,0,0,0.2),
-        inset 0 0 30px rgba(139, 69, 19, 0.05);
+        5px 8px 15px rgba(0,0,0,0.15),
+        15px 15px 30px rgba(0,0,0,0.05);
 }
 
-.trivia-question:focus-within {
-    border-color: #8d6e63;
-    box-shadow: 0 0 0 2px rgba(141, 110, 99, 0.3), 3px 3px 8px rgba(0,0,0,0.15);
+/* Edge curl effect on hover */
+.trivia-question:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50%);
+    z-index: 2;
+    border-radius: 0 0 5px 0;
+    transition: all 0.3s ease;
+}
+
+.trivia-question:active {
+    transform: scale(0.98); /* Compress like soft paper */
+    transition: transform 0.1s ease-out;
 }
 
 .question-side {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .question-text {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 400;
     margin: 0;
-    color: #3e2723; /* Dark brown ink */
-    font-family: 'Georgia', serif;
-    line-height: 1.4;
+    color: #2c1b18; /* Deep ink */
+    font-family: 'IM Fell English', serif;
+    line-height: 1.5;
+    text-shadow: 0 0 1px rgba(62, 39, 35, 0.1);
 }
 
 .answer-side {
     width: 100%;
+    z-index: 1;
 }
 
 .answer-options {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
 }
 
 .answer-option {
-    background-color: #efebe9;
-    border: 1px solid #d7ccc8;
-    border-radius: 4px;
-    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); /* Springy transition */
-    box-shadow: 0 2px 0 #d7ccc8;
+    background-color: transparent;
+    border: 2px solid #8d6e63;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Springy transition */
+    position: relative;
+    overflow: hidden;
 }
 
 .answer-option:hover {
-    background-color: #fff;
-    transform: scale(1.01) rotate(-0.5deg);
-    box-shadow: 0 4px 2px rgba(0,0,0,0.1);
-    z-index: 1;
+    background-color: rgba(141, 110, 99, 0.1);
+    transform: scale(1.02) rotate(-0.5deg);
+    border-color: #3e2723;
+}
+
+/* Ink stroke highlight animation */
+.answer-option::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 0; height: 100%;
+    background-color: rgba(62, 39, 35, 0.05);
+    transition: width 0.4s ease-out;
+    z-index: -1;
+}
+
+.answer-option:hover::before {
+    width: 100%;
 }
 
 .answer-option:active {
-    transform: scale(0.99);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    transform: scale(0.96);
 }
 
 .answer-label {
     display: flex;
     align-items: center;
-    padding: 12px;
+    padding: 15px 20px;
     cursor: pointer;
     width: 100%;
     box-sizing: border-box;
@@ -81,45 +122,65 @@
 
 .answer-input {
     margin-right: 15px;
-    transform: scale(1.2);
+    transform: scale(1.3);
     cursor: pointer;
-    accent-color: #5d4037;
+    accent-color: #3e2723;
+    filter: sepia(100%) hue-rotate(-30deg) saturate(200%); /* Match ink color */
 }
 
 .option-text {
-    font-size: 1.05rem;
-    color: #4e342e;
-    font-family: 'Georgia', serif;
+    font-size: 1.2rem;
+    color: #3e2723;
+    font-family: 'IM Fell English', serif;
 }
 
+/* Correct Answer - Particle Effect Simulation */
 .correct-question {
-    background-color: #e8f5e9;
+    background-color: #f1f8e9;
     border-color: #a5d6a7;
-    box-shadow: inset 0 0 20px rgba(76, 175, 80, 0.1);
+    animation: dust-particles 0.6s ease-out;
 }
 
+@keyframes dust-particles {
+    0% { box-shadow: 0 0 0 0 rgba(165, 214, 167, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(165, 214, 167, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(165, 214, 167, 0); }
+}
+
+/* Wrong Answer - Ripple Effect */
 .incorrect-question {
     background-color: #ffebee;
     border-color: #ef9a9a;
-    box-shadow: inset 0 0 20px rgba(244, 67, 54, 0.1);
+    animation: ripple-shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes ripple-shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0) rotate(-1deg); }
+    20%, 80% { transform: translate3d(2px, 0, 0) rotate(1deg); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0) rotate(-1deg); }
+    40%, 60% { transform: translate3d(4px, 0, 0) rotate(1deg); }
 }
 
 .correct-answer-text {
-    color: #2e7d32;
+    color: #1b5e20;
     font-weight: bold;
-    text-decoration: underline wavy #2e7d32;
+    text-decoration: none;
+    position: relative;
+}
+
+.correct-answer-text::after {
+    content: '✓';
+    position: absolute;
+    right: -25px;
+    top: 0;
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.2em;
 }
 
 .correct-answer {
-    background-color: #c8e6c9 !important;
-    border-color: #81c784 !important;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
+    background-color: rgba(165, 214, 167, 0.4) !important;
+    border-color: #2e7d32 !important;
+    box-shadow: 0 0 10px rgba(46, 125, 50, 0.2);
 }
 
 /* Desktop Layout */
@@ -127,34 +188,29 @@
     .trivia-question {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 30px;
+        gap: 40px;
         align-items: center;
-        padding: 25px 30px;
-        height: auto; /* Allow height to adjust based on content, but we'll constrain container */
+        padding: 40px;
     }
 
     .question-side {
         margin-bottom: 0;
-        border-right: 2px dashed #d7ccc8; /* Perforated line look */
-        padding-right: 30px;
+        border-right: 2px dashed rgba(62, 39, 35, 0.2); /* Perforated line */
+        padding-right: 40px;
         height: 100%;
         display: flex;
         align-items: center;
+        justify-content: center;
     }
 
     .question-text {
-        font-size: 1.3rem;
+        font-size: 1.6rem;
+        text-align: center;
     }
 
     .answer-options {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Optional: 2 columns for answers on desktop if space permits */
-        gap: 15px;
-    }
-    
-    /* If we want answers in a single column on the right, remove the grid-template-columns above */
-    .answer-options {
-        display: flex;
-        flex-direction: column;
+        grid-template-columns: 1fr; /* Keep single column for better readability of long answers */
+        gap: 20px;
     }
 }
