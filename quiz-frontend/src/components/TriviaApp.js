@@ -94,13 +94,13 @@ const TriviaApp = () => {
         e.preventDefault();
         if (!selectedAnswer && currentIndex === -1) {
           // No answer selected, select first option
-          handleAnswerSelect(answers[0]);
+          setSelectedAnswer(answers[0]);
         } else if (isAnswered) {
           // Answer already submitted, move to next question
           handleNextQuestion();
-        } else if (selectedAnswer) {
+        } else if (selectedAnswer && !isAnswered) {
           // Answer selected but not submitted, submit it
-          // (Already auto-submitted on selection, so just prevent default)
+          handleAnswerSelect(selectedAnswer);
         }
       } else if ((e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') && !isAnswered) {
         e.preventDefault();
@@ -118,9 +118,6 @@ const TriviaApp = () => {
         e.preventDefault();
         const newIndex = currentIndex < answers.length - 1 ? currentIndex + 1 : 0;
         setSelectedAnswer(answers[newIndex]);
-      } else if (e.key === 'Enter' && selectedAnswer && !isAnswered) {
-        e.preventDefault();
-        handleAnswerSelect(selectedAnswer);
       }
     };
 

@@ -15,10 +15,11 @@ const TriviaQuestion = ({
       return option === selectedAnswer ? "selected" : "";
     }
     
-    // After answered
+    // After answered - always show correct answer in green
     if (option === correctAnswer) {
       return "correct-answer";
     }
+    // Show user's incorrect answer in red
     if (option === selectedAnswer && option !== correctAnswer) {
       return "incorrect-answer";
     }
