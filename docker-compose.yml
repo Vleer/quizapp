@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  backend:
+  quiz-backend:
     build:
       context: ./quiz-backend
       dockerfile: Dockerfile
@@ -15,5 +15,5 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      - quiz-backend
     restart: unless-stopped
