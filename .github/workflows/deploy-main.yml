@@ -101,6 +101,8 @@ jobs:
             ${{ env.REGISTRY }}/${{ steps.repo_owner.outputs.lowercase }}/${{ env.FRONTEND_IMAGE }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            PUBLIC_URL=/quizapp
 
   update-manifests:
     needs: [build-backend, build-frontend]
