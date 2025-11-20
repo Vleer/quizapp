@@ -4,7 +4,12 @@ import TriviaQuestion from "./TriviaQuestion";
 import "./TriviaApp.css"; // Import your CSS file for styling
 
 // Use relative URLs through Ingress: /api will route to backend
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "/api";
+// Get base path from PUBLIC_URL to support subpath routing
+const getApiBaseUrl = () => {
+  const basePath = process.env.PUBLIC_URL || '';
+  return basePath ? `${basePath}/api` : '/api';
+};
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || getApiBaseUrl();
 
 const TriviaApp = () => {
   const [triviaData, setTriviaData] = useState([]);
