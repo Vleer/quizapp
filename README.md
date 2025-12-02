@@ -16,7 +16,7 @@ This is a simple project developed to demonstrate my programming abilities in bu
 - State management using React Hooks.
 - Fetching data from an external API in React.
 - Handling HTTP requests using Axios.
-- Caching with Spring's `@Cacheable` and `@CacheEvict` annotations.
+- Stateless backend: no sticky sessions or in-memory persistence, all quiz data and answer history live in MongoDB, and Redis backs the shared cache.
 - Docker to containerize the application.
 - Composing frontend and backend using Docker Compose.
 
@@ -55,6 +55,10 @@ cd ..
 # Build and start Docker containers
 docker compose up --build
 ```
+
+### Infrastructure Services
+- MongoDB stores trivia questions served to users and answer submissions so any backend instance can respond without shared memory.
+- Redis powers the distributed cache for fetched question sets and keeps the backend stateless across replicas.
 
 ### Manual Setup (Without Docker)
 

@@ -6,7 +6,16 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/quizapp
+      - SPRING_DATA_MONGODB_DATABASE=quizapp
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - QUIZAPP_SECRET_SALT=${QUIZAPP_SECRET_SALT:-QuizApp2025SecretSalt}
     restart: unless-stopped
+    depends_on:
+      - mongo
+      - redis
 
   frontend:
     build:
@@ -17,3 +26,20 @@ services:
     depends_on:
       - quiz-backend
     restart: unless-stopped
+
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo-data:
